@@ -2,11 +2,11 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# An example controller showing a sample home page
+GET     /get/:name        controllers.BrandController.getById(name: String)
+POST    /create           controllers.BrandController.create(request: Request)
+# POST    /update           controllers.BrandController.update(request: Request)
+# DELETE  /delete/:name     controllers.BrandController.delete(name: String)
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /list                       controllers.BrandController.list()
-POST    /create                     controllers.BrandController.create(request: Request)
-
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

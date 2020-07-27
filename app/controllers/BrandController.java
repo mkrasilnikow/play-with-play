@@ -1,52 +1,56 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import mapper.BrandStore;
-import model.BrandEntity;
+import context.ControllerExecutionContext;
+import exceptions.UsedCarServiceException;
+import play.libs.concurrent.HttpExecution;
+import service.BrandService;
+import models.BrandEntity;
 import play.libs.Json;
-import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.twirl.api.Html;
-import utils.ResponseUtils;
 
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Executor;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
-import static play.mvc.Results.*;
+import static utils.ResponseUtils.createErrorResponse;
+import static utils.ResponseUtils.createSuccessfulResponse;
 
 public class BrandController extends Controller {
-    private HttpExecutionContext executionContext;
-    private BrandStore brandStore;
+    private ControllerExecutionContext controllerExecutionContext;
+    private Executor ex;
+    private BrandService brandService;
 
     @Inject
-    public BrandController(HttpExecutionContext executionContext, BrandStore brandStore) {
-        this.executionContext = executionContext;
-        this.brandStore = brandStore;
+    public BrandController(ControllerExecutionContext controllerExecutionContext,
+                           Executor ex, BrandService brandService) {
+        this.controllerExecutionContext = controllerExecutionContext;
+        this.ex = HttpExecution.fromThread(controllerExecutionContext);
+        this.brandService = brandService;
     }
 
 
     public CompletionStage<Result> create(Http.Request request) {
         JsonNode json = request.body().asJson();
-        return supplyAsync(() -> {
-            if (json == null) {
-                return badRequest(ResponseUtils.createResponse("Bad request", false));
-            }
-            Optional<BrandEntity> brandEntityOptional = brandStore.addBrand(Json.fromJson(json, BrandEntity.class));
-            return brandEntityOptional.map(brand -> {
-                JsonNode jsonObject = Json.toJson(brand);
-                return created(ResponseUtils.createResponse(jsonObject, true));
-            }).orElse(internalServerError(ResponseUtils.createResponse("Could not create data.", false)));
-        }, executionContext.current());
+        return brandService.create(Json.fromJson(json, BrandEntity.class))
+                .thenApplyAsync(brand -> created(createSuccessfulResponse(brand)),ex)
+                .exceptionally(e -> internalServerError(createErrorResponse(e.getMessage())));
     }
 
     public Result list() {
-        var brands = brandStore.getAll();
-        return ok(Json.toJson(brands));
+       // var brands = brandStore.getAll();
+        return ok(Json.toJson("brands"));
+    }
+
+    public CompletionStage<Result> getById(@NotNull String name) {
+        return brandService.getByName(name).thenApplyAsync(optionalBrand -> optionalBrand.map(brand -> {
+            JsonNode jsonObject = Json.toJson(brand);
+            return ok(createSuccessfulResponse(jsonObject));
+        }).orElse(notFound(createSuccessfulResponse(null))), ex);
     }
 }

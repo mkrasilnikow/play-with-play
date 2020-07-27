@@ -9,14 +9,15 @@ public class ResponseUtils {
         throw new IllegalStateException("utility class");
     }
 
-    public static ObjectNode createResponse(Object response, boolean ok) {
+    public static ObjectNode createSuccessfulResponse(Object response) {
         ObjectNode result = Json.newObject();
-        result.put("isSuccessful", ok);
-        if (response instanceof String) {
-            result.put("body", (String) response);
-        } else {
-            result.putPOJO("body", response);
-        }
+        result.putPOJO("data", response);
+        return result;
+    }
+
+    public static ObjectNode createErrorResponse(String errCode) {
+        ObjectNode result = Json.newObject();
+        result.put("errorMessage", errCode);
         return result;
     }
 }

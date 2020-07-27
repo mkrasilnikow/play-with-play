@@ -1,20 +1,7 @@
-package model;
+package models;
 
-import io.ebean.Model;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "brands")
-public class BrandEntity extends Model {
-    @Id
-    @Column(name = "name", nullable = false)
+public class BrandEntity {
     private String name;
-
-    @Column(name = "origin", nullable = false)
     private String originCountry;
 
     public String getName() {

@@ -1,26 +1,12 @@
-package model;
+package models;
 
-import io.ebean.Model;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.validation.constraints.Positive;
 
-@Entity
-@Table(name = "models")
-public class ModelEntity extends Model {
-    @Id
-    @Column(name = "name", nullable = false)
+public class ModelEntity {
     private String name;
-
     @Positive
-    @Column(name = "startYear", nullable = false)
     private int yearOfProductionStart;
-
     @Positive
-    @Column(name = "endYear")
     private int yearOfProductionEnd;
 
     public String getName() {

@@ -1,39 +1,18 @@
-package model;
+package models;
 
-import io.ebean.Model;
-
-import javax.persistence.*;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "products")
-public class ProductItemEntity extends Model {
-    @Id
-    @SequenceGenerator(name="seq_PK",sequenceName="ID_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_PK")
-    @Column(name = "id", nullable = false)
+public class ProductItemEntity {
     private int id;
-
-    @ManyToOne
-    @JoinColumn(name = "brand", referencedColumnName = "name")
     private BrandEntity brand;
-
-    @ManyToOne
-    @JoinColumn(name = "brand", referencedColumnName = "name")
     private ModelEntity model;
-
     @Positive
-    @Column(name = "startYear", nullable = false)
     private int yearOfProduction;
-
     @PositiveOrZero
-    @Column(name = "mileage")
     private int mileage;
-
     @PositiveOrZero
-    @Column(name = "price")
     private BigDecimal price;
 
     public BrandEntity getBrand() {
