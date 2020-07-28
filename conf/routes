@@ -19,5 +19,5 @@ POST    /product/create         controllers.ProductController.create(request: Re
 POST    /product/update         controllers.ProductController.update(request: Request)
 DELETE  /product/delete/:id     controllers.ProductController.delete(id: Integer)
 
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET   /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
+GET   /assets/*file                 controllers.Assets.versioned(path="/public", file: Asset)
