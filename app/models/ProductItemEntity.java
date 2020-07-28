@@ -65,8 +65,8 @@ public class ProductItemEntity {
     public String toString() {
         return "ProductItemEntity{" +
                 "id='" + id + '\'' +
-                ", brand=" + brand.toString() +
-                ", model=" + model.toString() +
+                ", brand=" + brand +
+                ", model=" + model +
                 ", yearOfProduction=" + yearOfProduction +
                 ", mileage=" + mileage +
                 ", price=" + price +

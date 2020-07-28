@@ -2,15 +2,12 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import context.ControllerExecutionContext;
-import exceptions.BrandNotFoundException;
 import exceptions.ModelNotFoundException;
-import models.BrandEntity;
 import models.ModelEntity;
 import play.libs.Json;
 import play.libs.concurrent.HttpExecution;
 import play.mvc.Http;
 import play.mvc.Result;
-import service.BrandService;
 import service.ModelService;
 
 import javax.inject.Inject;

@@ -1,19 +1,20 @@
 package service;
 
+import akka.http.impl.engine.ws.FrameHandler;
 import context.DatabaseExecutionContext;
-import exceptions.ModelNotFoundException;
 import exceptions.ProductNotFoundException;
 import exceptions.UsedCarServiceException;
 import io.jsonwebtoken.lang.Assert;
-import mappers.ModelMapper;
 import mappers.ProductMapper;
-import models.ModelEntity;
 import models.ProductItemEntity;
 
 import javax.inject.Inject;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
@@ -29,6 +30,28 @@ public class ProductService {
 
     public CompletionStage<Optional<ProductItemEntity>> getById(int id) {
         return supplyAsync(() -> ofNullable(productMapper.getById(id)),
+                mapperExecutionContext);
+    }
+
+    public CompletionStage<List<ProductItemEntity>> searchByBrandAndOptionalModel(String brand, String model) {
+        System.out.println(">> " + brand + " " + model);
+        return supplyAsync(() -> {
+            if (model != null) {
+                System.out.println(">> present");
+                return productMapper.searchByBrandAndModel(brand, model);
+            } else {
+                System.out.println(">> NOT present");
+                return productMapper.searchByBrand(brand);
+            }
+        }, mapperExecutionContext);
+/*        return supplyAsync(() -> ofNullable(
+                model.map(v -> productMapper.searchByBrandAndModel(brand, v))
+                     .orElseGet(() -> productMapper.searchByBrand(brand))
+        ).orElse(emptyList()), mapperExecutionContext);*/
+    }
+
+    public CompletionStage<List<ProductItemEntity>> fuzzySearchByModel(String model) {
+        return supplyAsync(() -> ofNullable(productMapper.fuzzySearchByModel(wrap(model))).orElse(emptyList()),
                 mapperExecutionContext);
     }
 
@@ -70,5 +93,9 @@ public class ProductService {
                 throw new UsedCarServiceException(e.getMessage());
             }
         }, mapperExecutionContext);
+    }
+
+    private static String wrap(String value) {
+        return "%" + value + "%";
     }
 }

@@ -13,8 +13,10 @@ POST    /model/update           controllers.ModelController.update(request: Requ
 DELETE  /model/delete/:name     controllers.ModelController.delete(name: String)
 
 GET     /product/get/:id        controllers.ProductController.getById(id: Integer)
-POST    /product/create           controllers.ProductController.create(request: Request)
-POST    /product/update           controllers.ProductController.update(request: Request)
+GET     /product/search         controllers.ProductController.searchByBrandAndOptionalModel(brand: String, model: String ?=null)
+GET     /product/fuzzy-search   controllers.ProductController.fuzzySearchByModel(model: String)
+POST    /product/create         controllers.ProductController.create(request: Request)
+POST    /product/update         controllers.ProductController.update(request: Request)
 DELETE  /product/delete/:id     controllers.ProductController.delete(id: Integer)
 
 # Map static resources from the /public folder to the /assets URL path

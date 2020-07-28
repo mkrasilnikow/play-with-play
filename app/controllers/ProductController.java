@@ -2,9 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import context.ControllerExecutionContext;
-import exceptions.ModelNotFoundException;
 import exceptions.ProductNotFoundException;
-import models.ModelEntity;
 import models.ProductItemEntity;
 import play.libs.Json;
 import play.libs.concurrent.HttpExecution;
@@ -13,7 +11,7 @@ import play.mvc.Result;
 import service.ProductService;
 
 import javax.inject.Inject;
-import javax.validation.constraints.NotNull;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
 
@@ -31,6 +29,22 @@ public class ProductController {
         this.productService = productService;
     }
 
+    public CompletionStage<Result> searchByBrandAndOptionalModel(String brand, String model) {
+        return productService.searchByBrandAndOptionalModel(brand, model)
+                .thenApplyAsync(product -> {
+                    JsonNode jsonObject = Json.toJson(product);
+                    return ok(createSuccessfulResponse(jsonObject));
+                }, ex);
+    }
+
+    public CompletionStage<Result> fuzzySearchByModel(String model) {
+        return productService.fuzzySearchByModel(model)
+                .thenApplyAsync(product -> {
+                    JsonNode jsonObject = Json.toJson(product);
+                    return ok(createSuccessfulResponse(jsonObject));
+                }, ex);
+    }
+
     public CompletionStage<Result> create(Http.Request request) {
         JsonNode json = request.body().asJson();
         return productService.create(Json.fromJson(json, ProductItemEntity.class))
@@ -46,15 +60,14 @@ public class ProductController {
                         notFound(createErrorResponse(e.getMessage())) : internalServerError(createErrorResponse(e.getMessage())));
     }
 
-    public CompletionStage<Result> getById(@NotNull Integer id) {
+    public CompletionStage<Result> getById(Integer id) {
         return productService.getById(id).thenApplyAsync(optionalProduct -> optionalProduct.map(product -> {
             JsonNode jsonObject = Json.toJson(product);
-            System.out.println(product.toString());
             return ok(createSuccessfulResponse(jsonObject));
         }).orElse(notFound(createSuccessfulResponse(null))), ex);
     }
 
-    public CompletionStage<Result> delete(@NotNull Integer id) {
+    public CompletionStage<Result> delete(Integer id) {
         return productService.delete(id)
                 .thenApplyAsync(v -> ok(createSuccessfulResponse(null)), ex)
                 .exceptionally(e -> e.getCause() instanceof ProductNotFoundException?

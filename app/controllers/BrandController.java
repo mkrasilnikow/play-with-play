@@ -45,14 +45,14 @@ public class BrandController extends Controller {
                         notFound(createErrorResponse(e.getMessage())) : internalServerError(createErrorResponse(e.getMessage())));
     }
 
-    public CompletionStage<Result> getByName(@NotNull String name) {
+    public CompletionStage<Result> getByName(String name) {
         return brandService.getByName(name).thenApplyAsync(optionalBrand -> optionalBrand.map(brand -> {
             JsonNode jsonObject = Json.toJson(brand);
             return ok(createSuccessfulResponse(jsonObject));
         }).orElse(notFound(createSuccessfulResponse(null))), ex);
     }
 
-    public CompletionStage<Result> delete(@NotNull String name) {
+    public CompletionStage<Result> delete(String name) {
         return brandService.delete(name)
                 .thenApplyAsync(v -> ok(createSuccessfulResponse(null)), ex)
                 .exceptionally(e -> e.getCause() instanceof BrandNotFoundException?
