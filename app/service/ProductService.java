@@ -1,6 +1,5 @@
 package service;
 
-import akka.http.impl.engine.ws.FrameHandler;
 import context.DatabaseExecutionContext;
 import exceptions.ProductNotFoundException;
 import exceptions.UsedCarServiceException;
@@ -9,7 +8,6 @@ import mappers.ProductMapper;
 import models.ProductItemEntity;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
@@ -34,20 +32,9 @@ public class ProductService {
     }
 
     public CompletionStage<List<ProductItemEntity>> searchByBrandAndOptionalModel(String brand, String model) {
-        System.out.println(">> " + brand + " " + model);
-        return supplyAsync(() -> {
-            if (model != null) {
-                System.out.println(">> present");
-                return productMapper.searchByBrandAndModel(brand, model);
-            } else {
-                System.out.println(">> NOT present");
-                return productMapper.searchByBrand(brand);
-            }
-        }, mapperExecutionContext);
-/*        return supplyAsync(() -> ofNullable(
-                model.map(v -> productMapper.searchByBrandAndModel(brand, v))
-                     .orElseGet(() -> productMapper.searchByBrand(brand))
-        ).orElse(emptyList()), mapperExecutionContext);*/
+        return supplyAsync(() -> model.isEmpty() ?
+                productMapper.searchByBrand(brand)
+                : productMapper.searchByBrandAndModel(brand, model), mapperExecutionContext);
     }
 
     public CompletionStage<List<ProductItemEntity>> fuzzySearchByModel(String model) {
