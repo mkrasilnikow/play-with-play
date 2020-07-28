@@ -66,3 +66,10 @@ curl --location --request POST 'localhost:9000/brand/create' \
         "originCountry": "America"
     }'
 ```
+## Swagger
+
+Also available on this url:
+
+http://localhost:9000/docs/swagger-ui/index.html?url=/assets/swagger.json
+
+But without POST operations
