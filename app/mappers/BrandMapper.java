@@ -15,9 +15,10 @@ public interface BrandMapper {
     @Insert("insert into brands (name,origin) values(#{name},#{originCountry})")
     void create(BrandEntity entity);
 
+    @Update("update brands set origin=#{originCountry} where name=#{name}")
     void update(BrandEntity entity);
 
-    void delete(BrandEntity entity);
-
+    @Delete("delete from brands where name=#{name}")
+    void delete(String name);
 
 }

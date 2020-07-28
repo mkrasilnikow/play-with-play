@@ -4,7 +4,6 @@ organization := "ru.ds"
 version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
-val AkkaVersion = "2.6.8"
 
 scalaVersion := "2.13.3"
 
