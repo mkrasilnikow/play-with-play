@@ -1,33 +1,31 @@
 package models;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
 
 public class ProductItemEntity {
     private int id;
-    private BrandEntity brand;
-    private ModelEntity model;
-    @Positive
+    private String brand;
+    private String model;
     private int yearOfProduction;
-    @PositiveOrZero
     private int mileage;
-    @PositiveOrZero
+    @JsonFormat(shape= JsonFormat.Shape.STRING)
     private BigDecimal price;
 
-    public BrandEntity getBrand() {
+    public String getBrand() {
         return brand;
     }
 
-    public void setBrand(BrandEntity brand) {
+    public void setBrand(String brand) {
         this.brand = brand;
     }
 
-    public ModelEntity getModel() {
+    public String getModel() {
         return model;
     }
 
-    public void setModel(ModelEntity model) {
+    public void setModel(String model) {
         this.model = model;
     }
 

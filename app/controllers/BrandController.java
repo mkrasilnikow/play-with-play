@@ -24,8 +24,7 @@ public class BrandController extends Controller {
     private final BrandService brandService;
 
     @Inject
-    public BrandController(ControllerExecutionContext controllerExecutionContext,
-                           Executor ex, BrandService brandService) {
+    public BrandController(ControllerExecutionContext controllerExecutionContext, BrandService brandService) {
         this.ex = HttpExecution.fromThread(controllerExecutionContext);
         this.brandService = brandService;
     }
@@ -46,7 +45,7 @@ public class BrandController extends Controller {
                         notFound(createErrorResponse(e.getMessage())) : internalServerError(createErrorResponse(e.getMessage())));
     }
 
-    public CompletionStage<Result> getById(@NotNull String name) {
+    public CompletionStage<Result> getByName(@NotNull String name) {
         return brandService.getByName(name).thenApplyAsync(optionalBrand -> optionalBrand.map(brand -> {
             JsonNode jsonObject = Json.toJson(brand);
             return ok(createSuccessfulResponse(jsonObject));

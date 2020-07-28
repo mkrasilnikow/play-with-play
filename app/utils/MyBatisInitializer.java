@@ -2,6 +2,8 @@ package utils;
 
 import com.google.inject.name.Names;
 import mappers.BrandMapper;
+import mappers.ModelMapper;
+import mappers.ProductMapper;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.mybatis.guice.MyBatisModule;
 import play.db.Database;
@@ -22,7 +24,7 @@ public class MyBatisInitializer extends MyBatisModule {
                 to(true);
         bindDataSourceProviderType(PlayDataSourceProvider.class);
         bindTransactionFactoryType(JdbcTransactionFactory.class);
-        addMapperClasses(List.of(BrandMapper.class));
+        addMapperClasses(List.of(BrandMapper.class, ModelMapper.class, ProductMapper.class));
     }
 
     @Singleton

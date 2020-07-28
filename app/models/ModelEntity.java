@@ -1,12 +1,8 @@
 package models;
 
-import javax.validation.constraints.Positive;
-
 public class ModelEntity {
     private String name;
-    @Positive
     private int yearOfProductionStart;
-    @Positive
     private int yearOfProductionEnd;
 
     public String getName() {

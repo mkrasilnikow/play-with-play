@@ -1,11 +1,11 @@
 package service;
 
 import context.DatabaseExecutionContext;
-import exceptions.BrandNotFoundException;
+import exceptions.ModelNotFoundException;
 import exceptions.UsedCarServiceException;
 import io.jsonwebtoken.lang.Assert;
-import mappers.BrandMapper;
-import models.BrandEntity;
+import mappers.ModelMapper;
+import models.ModelEntity;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -14,41 +14,41 @@ import java.util.concurrent.CompletionStage;
 import static java.util.Optional.ofNullable;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
-public class BrandService {
-    private final BrandMapper brandMapper;
+public class ModelService {
+    private final ModelMapper modelMapper;
     private final DatabaseExecutionContext mapperExecutionContext;
 
     @Inject
-    public BrandService(BrandMapper brandMapper, DatabaseExecutionContext mapperExecutionContext) {
-        this.brandMapper = brandMapper;
+    public ModelService(ModelMapper modelMapper, DatabaseExecutionContext mapperExecutionContext) {
+        this.modelMapper = modelMapper;
         this.mapperExecutionContext = mapperExecutionContext;
     }
 
-    public CompletionStage<Optional<BrandEntity>> getByName(String name) {
-        return supplyAsync(() -> ofNullable(brandMapper.getByName(name)),
+    public CompletionStage<Optional<ModelEntity>> getByName(String name) {
+        return supplyAsync(() -> ofNullable(modelMapper.getByName(name)),
                 mapperExecutionContext);
     }
 
-    public CompletionStage<BrandEntity> create(BrandEntity brand) {
+    public CompletionStage<ModelEntity> create(ModelEntity model) {
         return supplyAsync(() -> {
-            Assert.notNull(brand, "Brand entity must not be null!");
+            Assert.notNull(model, "Model entity must not be null!");
             try {
-                brandMapper.create(brand);
-                return brand;
+                modelMapper.create(model);
+                return model;
             } catch (Exception e) {
                 throw new UsedCarServiceException(e.getMessage());
             }
         }, mapperExecutionContext);
     }
 
-    public CompletionStage<BrandEntity> update(BrandEntity brand) {
+    public CompletionStage<ModelEntity> update(ModelEntity model) {
         return supplyAsync(() -> {
-            Assert.notNull(brand, "Brand entity must not be null!");
-            ofNullable(brandMapper.getByName(brand.getName()))
-                    .orElseThrow(() -> new BrandNotFoundException("Not found: " + brand.getName()));
+            Assert.notNull(model, "Model entity must not be null!");
+            ofNullable(modelMapper.getByName(model.getName()))
+                    .orElseThrow(() -> new ModelNotFoundException("Not found: " + model.getName()));
             try {
-                brandMapper.update(brand);
-                return brand;
+                modelMapper.update(model);
+                return model;
             } catch (Exception e) {
                 throw new UsedCarServiceException(e.getMessage());
             }
@@ -57,10 +57,10 @@ public class BrandService {
 
     public CompletionStage<Boolean> delete(String name) {
         return supplyAsync(() -> {
-            ofNullable(brandMapper.getByName(name))
-                    .orElseThrow(() -> new BrandNotFoundException("Not found: " + name));
+            ofNullable(modelMapper.getByName(name))
+                    .orElseThrow(() -> new ModelNotFoundException("Not found: " + name));
             try {
-                brandMapper.delete(name);
+                modelMapper.delete(name);
                 return true;
             } catch (Exception e) {
                 throw new UsedCarServiceException(e.getMessage());
