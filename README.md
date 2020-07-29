@@ -1,6 +1,6 @@
 # Used car shop service
 ## Run
-Just for building an application
+Just for running an application
 
 ``
 ./activator run
@@ -20,6 +20,7 @@ then
 ``
 [used-car-shop-service] $ h2-browser
 ``
+
 Default settings for h2:
  * JDBC URL: jdbc:h2:mem:play
  * username: sa
@@ -33,6 +34,14 @@ after it'll started, start service:
 
 ## Using 
 All endpoints available at http://localhost:9000
+
+## Swagger
+
+Also available on this url:
+
+http://localhost:9000/docs/swagger-ui/index.html?url=/assets/swagger.json
+
+But POST operations requests don't work correctly(
 
 ## Base requests
 
@@ -62,14 +71,7 @@ curl --location --request POST 'localhost:9000/model/create' \
 curl --location --request POST 'localhost:9000/brand/create' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-        "name": "Dodje11",
-        "originCountry": "America"
+        "name": "Crysler",
+        "originCountry": "USA"
     }'
 ```
-## Swagger
-
-Also available on this url:
-
-http://localhost:9000/docs/swagger-ui/index.html?url=/assets/swagger.json
-
-But without POST operations
