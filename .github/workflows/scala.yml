@@ -17,4 +17,4 @@ jobs:
       with:
         java-version: 1.11
     - name: Run tests
-      run: sbt test
+      run: chmod +x ./activator test
