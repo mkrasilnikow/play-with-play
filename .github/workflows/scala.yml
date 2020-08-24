@@ -16,5 +16,7 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.11
+    - name: Change activator permissions
+      run: chmod +x ./activator
     - name: Run tests
-      run: chmod +x ./activator test
+      run: ./activator test
